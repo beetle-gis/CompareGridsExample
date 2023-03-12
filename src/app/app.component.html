@@ -2,6 +2,7 @@
   [kendoGridBinding]="gridView"
   kendoGridSelectBy="id"
   [(selectedKeys)]="mySelection"
+  [kendoGridInCellEditing]="createFormGroup"
   [pageSize]="20"
   [pageable]="true"
   [sortable]="true"
@@ -9,6 +10,7 @@
   [resizable]="true"
   [height]="500"
   [columnMenu]="{ filter: true }"
+  (dataStateChange)="dataStateChange($event)"
 >
   <ng-template kendoGridToolbarTemplate>
     <input [style.width.px]="165" placeholder="Search in all columns..." kendoTextBox (input)="onFilter($event)"/>
@@ -111,6 +113,9 @@
       </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="billing.cost" title="Cost" [width]="200" filter="numeric" format="{0:c}">
+      <ng-template kendoGridFooterTemplate>
+        Total sum: {{ total['billing.cost'].sum | currency }}
+      </ng-template>
     </kendo-grid-column>
   </kendo-grid-column-group>
 
