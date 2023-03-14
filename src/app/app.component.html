@@ -12,12 +12,14 @@
   [columnMenu]="{ filter: true }"
   (dataStateChange)="dataStateChange($event)"
 >
+
   <ng-template kendoGridToolbarTemplate>
     <input [style.width.px]="165" placeholder="Search in all columns..." kendoTextBox (input)="onFilter($event)"/>
     <kendo-grid-spacer></kendo-grid-spacer>
     <button kendoGridExcelCommand type="button" icon="file-excel">Export to Excel</button>
     <button kendoGridPDFCommand icon="file-pdf">Export to PDF</button>
   </ng-template>
+
   <kendo-grid-checkbox-column
     [width]="45"
     [headerClass]="{'text-center': true}"
@@ -27,14 +29,17 @@
     [showSelectAll]="true"
     [locked]="true"
   ></kendo-grid-checkbox-column>
+
   <kendo-grid-column-group title="Group 1" [columnMenu]="false">
     <kendo-grid-column field="status.name" title="Trip Status" [width]="220">
       <ng-template kendoGridCellTemplate let-dataItem>
         <div class="customer-name">{{ dataItem.status.name }}</div>
       </ng-template>
     </kendo-grid-column>
+
     <kendo-grid-column field="trip_id" title="Trip Number" [width]="220">
     </kendo-grid-column>
+
     <kendo-grid-column
       field="is_confirmed"
       title="Is Confirmed"
@@ -46,6 +51,7 @@
         <span>{{ dataItem ? 'Confirmed' : 'Not Confirmed' }}</span>
       </ng-template>
     </kendo-grid-column>
+
     <kendo-grid-column
       field="is_rescue"
       title="Rescue Trip"
@@ -60,6 +66,7 @@
       </ng-template>
     </kendo-grid-column>
   </kendo-grid-column-group>
+
   <kendo-grid-column-group title="Group 2" [columnMenu]="false">
     <kendo-grid-column
       field="bidding_start_timestamp"
@@ -72,6 +79,7 @@
         <span>{{ dataItem.bidding_start_timestamp | date : 'short' }}</span>
       </ng-template>
     </kendo-grid-column>
+
     <kendo-grid-column
       field="acceptance_by_transportation_provider_status"
       title="Acceptance"
@@ -83,6 +91,7 @@
         <span>{{ dataItem.acceptance_by_transportation_provider_status.name }}</span>
       </ng-template>
     </kendo-grid-column>
+
     <kendo-grid-column
       field="bidding_status"
       title="Bidding"
@@ -101,17 +110,20 @@
       </ng-template>
     </kendo-grid-column>
   </kendo-grid-column-group>
+
   <kendo-grid-column-group title="Group 3" [columnMenu]="false">
     <kendo-grid-column field="phone" title="Phone" [width]="130">
       <ng-template kendoGridCellTemplate let-dataItem>
         <span>{{ dataItem.phone | phone }}</span>
       </ng-template>
     </kendo-grid-column>
+
     <kendo-grid-column field="is_covid_eligible_transport_required" title="COVID Transport" [width]="220">
       <ng-template kendoGridCellTemplate let-dataItem>
         <span>{{ dataItem.is_covid_eligible_transport_required ? 'Yes' : 'No' }}</span>
       </ng-template>
     </kendo-grid-column>
+
     <kendo-grid-column field="billing.cost" title="Cost" [width]="200" filter="numeric" format="{0:c}">
       <ng-template kendoGridFooterTemplate>
         Total sum: {{ total['billing.cost'].sum | currency }}

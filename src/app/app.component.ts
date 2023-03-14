@@ -91,7 +91,6 @@ export class AppComponent implements OnInit {
     const item = args.isNew ? {} : args.dataItem;
 
     this.formGroup = this.formBuilder.group({
-      // 'status.name': [item['status.name']],
       trip_id: [item.trip_id],
       /*...*/
     });
