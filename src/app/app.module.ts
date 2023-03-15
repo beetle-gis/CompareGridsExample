@@ -9,7 +9,6 @@ import { ChartsModule } from '@progress/kendo-angular-charts';
 import { InputsModule } from '@progress/kendo-angular-inputs';
 
 import { AppComponent } from './app.component';
-import { RatingComponent } from './rating/rating.component';
 import { PhonePipe } from "./phone.pipe";
 
 import 'hammerjs';
