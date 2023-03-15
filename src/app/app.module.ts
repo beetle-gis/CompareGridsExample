@@ -27,7 +27,6 @@ import 'hammerjs';
   ],
   declarations: [
     AppComponent,
-    RatingComponent,
     PhonePipe
   ],
   bootstrap: [
