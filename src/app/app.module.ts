@@ -3,6 +3,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from "@angular/forms";
+import { ButtonsModule } from "@progress/kendo-angular-buttons";
+import { WindowModule, DialogsModule } from "@progress/kendo-angular-dialog";
+import { FilterModule } from "@progress/kendo-angular-filter";
 
 import { GridModule, PDFModule, ExcelModule } from '@progress/kendo-angular-grid';
 import { ChartsModule } from '@progress/kendo-angular-charts';
@@ -24,6 +27,9 @@ import 'hammerjs';
     InputsModule,
     PDFModule,
     ExcelModule,
+    ButtonsModule,
+    FilterModule,
+    DialogsModule,
   ],
   declarations: [
     AppComponent,

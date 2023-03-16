@@ -1,3 +1,25 @@
+
+<div class="example-config">
+  <p class="k-form-hint">
+    Click the button below to filter the Grid from an external Filter
+    component
+  </p>
+  <button kendoButton (click)="open()" icon="filter">
+    Filter the Grid
+  </button>
+</div>
+
+<kendo-window *ngIf="opened" (close)="close()" [width]="620" [top]="300">
+  <div class="window-content">
+    <kendo-filter #filter [filters]="filters" [value]="filterValue">
+    </kendo-filter>
+
+    <button kendoButton (click)="applyFilter(filter.value)">
+      Apply filter
+    </button>
+  </div>
+</kendo-window>
+
 <kendo-grid
   [kendoGridBinding]="gridView"
   kendoGridSelectBy="id"
@@ -5,17 +27,19 @@
   [kendoGridInCellEditing]="createFormGroup"
   [pageSize]="20"
   [pageable]="true"
-  [sortable]="true"
+  [sortable]="sortSettings"
   [reorderable]="true"
   [resizable]="true"
   [height]="500"
   [columnMenu]="{ filter: true }"
+  [filterable]="true"
   (dataStateChange)="dataStateChange($event)"
 >
 
   <ng-template kendoGridToolbarTemplate>
     <input [style.width.px]="165" placeholder="Search in all columns..." kendoTextBox (input)="onFilter($event)"/>
     <kendo-grid-spacer></kendo-grid-spacer>
+    <button class="k-button" (click)="clearFilters()">Clear Filters</button>
     <button kendoGridExcelCommand type="button" icon="file-excel">Export to Excel</button>
     <button kendoGridPDFCommand icon="file-pdf">Export to PDF</button>
   </ng-template>
@@ -61,8 +85,8 @@
       filter="boolean"
     >
       <ng-template kendoGridCellTemplate let-dataItem>
-        <span *ngIf="dataItem.is_rescue == true" class="badge badge-success">Yes</span>
-        <span *ngIf="dataItem.is_rescue == false" class="badge badge-danger">No</span>
+        <span *ngIf="dataItem.is_rescue" class="badge badge-success">Yes</span>
+        <span *ngIf="!dataItem.is_rescue" class="badge badge-danger">No</span>
       </ng-template>
     </kendo-grid-column>
   </kendo-grid-column-group>
