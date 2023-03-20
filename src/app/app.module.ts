@@ -13,6 +13,7 @@ import { InputsModule } from '@progress/kendo-angular-inputs';
 
 import { AppComponent } from './app.component';
 import { PhonePipe } from "./phone.pipe";
+import { DatePipe } from "@angular/common";
 
 import 'hammerjs';
 
@@ -35,6 +36,7 @@ import 'hammerjs';
     AppComponent,
     PhonePipe
   ],
+  providers: [DatePipe],
   bootstrap: [
     AppComponent
   ]

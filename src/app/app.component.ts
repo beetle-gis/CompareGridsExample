@@ -13,6 +13,18 @@ import { MultipleSortSettings } from "@progress/kendo-angular-grid";
 import { trips } from './trips';
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { FilterExpression } from '@progress/kendo-angular-filter';
+import { DatePipe } from '@angular/common';
+
+const flatten = (filter: any) => {
+  const filters = filter.filters;
+  if (filters) {
+    return filters.reduce(
+      (acc: any, curr: any) => acc.concat(curr.filters ? flatten(curr) : [curr]),
+      []
+    );
+  }
+  return [];
+};
 
 @Component({
   selector: 'my-app',
@@ -20,6 +32,7 @@ import { FilterExpression } from '@progress/kendo-angular-filter';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+  public checked = false;
   @ViewChild(DataBindingDirective) dataBinding: DataBindingDirective;
   public gridData: unknown[] = trips;
   public gridView: DataResult;
@@ -93,7 +106,7 @@ export class AppComponent implements OnInit {
     }
   };
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private datePipe: DatePipe) {
     this.createFormGroup = this.createFormGroup.bind(this);
   }
 
@@ -117,6 +130,30 @@ export class AppComponent implements OnInit {
     };
 
     this.dataStateChange({...this.state, skip: 0, take: 20});
+  }
+
+  public switchChange(checked: boolean): void {
+    // @ts-ignore
+    const root = { logic: 'or', filter: [], ...this.filterValue };
+    const [filter] = flatten(root).filter((x: any) => x.field === "is_confirmed");
+
+    if (!filter) {
+      root.filters.push({
+        field: "is_confirmed",
+        operator: "eq",
+        value: checked ? 1 : 0
+      });
+    } else {
+      filter.value = checked ? 1 : 0;
+    }
+
+    this.filterChange(root);
+  }
+
+  public filterChange(filter: CompositeFilterDescriptor): void {
+    this.filterValue = filter;
+    this.state.filter = filter;
+    this.gridView = process(filterBy(trips, filter), this.state);
   }
 
   public onFilter(input: Event): void {
@@ -158,6 +195,10 @@ export class AppComponent implements OnInit {
 
   public dataStateChange(state: DataStateChangeEvent): void {
     console.log(state);
+    const [filter] = flatten(state.filter).filter((x: any) => x.field === "bidding_start_timestamp");
+    if (filter) {
+      filter.value = this.datePipe.transform(filter.value, 'yyyy-MM-dd h:mm:ss');
+    }
     this.state = state;
     this.gridView = process(trips, this.state);
     // this.total = aggregateBy(this.gridView.data, this.aggregates);

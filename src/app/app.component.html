@@ -72,8 +72,16 @@
       [class]="{'text-center': true}"
       [resizable]="true"
     >
+      <ng-template kendoGridFilterCellTemplate let-filter>
+        <kendo-switch
+          (valueChange)="switchChange($event)"
+          offLabel="Not Confirmed"
+          [checked]="checked"
+          onLabel="Confirmed">
+        </kendo-switch>
+      </ng-template>
       <ng-template kendoGridCellTemplate let-dataItem>
-        <span>{{ dataItem ? 'Confirmed' : 'Not Confirmed' }}</span>
+        <span>{{ dataItem.is_confirmed ? 'Confirmed' : 'Not Confirmed' }}</span>
       </ng-template>
     </kendo-grid-column>
 
