@@ -36,19 +36,13 @@ export class AppComponent implements OnInit {
   @ViewChild(DataBindingDirective) dataBinding: DataBindingDirective;
   public gridData: unknown[] = trips;
   public gridView: DataResult;
-
   public formGroup: FormGroup;
-
   public mySelection: string[] = [];
-
   public total: AggregateResult;
-
   public opened = false;
-
   public filterValue: CompositeFilterDescriptor = { logic: "or", filters: [] };
-
+  public filter: CompositeFilterDescriptor;
   public filterMode: FilterableSettings = "menu, row";
-
   public filters: FilterExpression[] = [
     {
       field: "status.name",
@@ -63,7 +57,7 @@ export class AppComponent implements OnInit {
     {
       field: "is_confirmed",
       title: "Is Confirmed",
-      editor: "string",
+      editor: "boolean",
     },
     {
       field: "is_rescue",
@@ -90,12 +84,12 @@ export class AppComponent implements OnInit {
         },
         {
           field: 'is_confirmed',
-          operator: 'contains',
+          operator: 'eq',
           value: ''
         },
         {
           field: 'is_rescue',
-          operator: 'contains',
+          operator: 'eq',
           value: ''
         },
         {
@@ -111,6 +105,15 @@ export class AppComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    this.gridData.forEach(trip => {
+      // @ts-ignore
+      if (trip.bidding_start_timestamp) {
+        // @ts-ignore
+        const slicedDate = trip.bidding_start_timestamp.slice(0, trip.bidding_start_timestamp.indexOf(' '));
+        // @ts-ignore
+        trip.bidding_start_timestamp = new Date(slicedDate).setHours(0,0,0,0);
+      }
+    });
     this.gridView = process(this.gridData, this.state);
     this.total = aggregateBy(this.gridView.data, this.aggregates);
 
@@ -125,7 +128,7 @@ export class AppComponent implements OnInit {
 
   public clearFilters() {
     this.state.filter = {
-      logic: 'or',
+      logic: 'and',
       filters: []
     };
 
@@ -134,7 +137,7 @@ export class AppComponent implements OnInit {
 
   public switchChange(checked: boolean, field: string): void {
     // @ts-ignore
-    const root = { logic: 'or', filter: [], ...this.filterValue };
+    const root = { logic: 'and', filters: [], ...this.filter };
     const [filter] = flatten(root).filter((x: any) => x.field === field);
 
     if (!filter) {
@@ -151,9 +154,9 @@ export class AppComponent implements OnInit {
   }
 
   public filterChange(filter: CompositeFilterDescriptor): void {
-    this.filterValue = filter;
+    this.filter = filter;
     this.state.filter = filter;
-    this.gridView = process(filterBy(trips, filter), this.state);
+    this.gridView = process(filterBy(this.gridData, filter), this.state);
   }
 
   public onFilter(input: Event): void {
@@ -194,13 +197,8 @@ export class AppComponent implements OnInit {
   }
 
   public dataStateChange(state: DataStateChangeEvent): void {
-    console.log(state);
-    // const [filter] = flatten(state.filter).filter((x: any) => x.field === "bidding_start_timestamp");
-    // if (filter) {
-    //   filter.value = this.datePipe.transform(filter.value, 'yyyy-MM-dd h:mm:ss');
-    // }
     this.state = state;
-    this.gridView = process(trips, this.state);
+    this.gridView = process(this.gridData, this.state);
     // this.total = aggregateBy(this.gridView.data, this.aggregates);
   }
 
@@ -225,7 +223,7 @@ export class AppComponent implements OnInit {
   }
 
   public applyFilter(value: CompositeFilterDescriptor): void {
-    this.gridView = process(filterBy(trips, value), this.state);
+    this.gridView = process(filterBy(this.gridData, value), this.state);
     this.filterValue = value;
   }
 

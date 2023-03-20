@@ -92,6 +92,14 @@
       [class]="{'text-center': true}"
       [resizable]="false"
     >
+      <ng-template kendoGridFilterCellTemplate let-filter>
+        <kendo-switch
+          (valueChange)="switchChange($event, 'is_rescue')"
+          offLabel="No"
+          [checked]="checked"
+          onLabel="Yes">
+        </kendo-switch>
+      </ng-template>
       <ng-template kendoGridCellTemplate let-dataItem>
         <span *ngIf="dataItem.is_rescue" class="badge badge-success">Yes</span>
         <span *ngIf="!dataItem.is_rescue" class="badge badge-danger">No</span>
@@ -107,6 +115,9 @@
       [resizable]="true"
       filter="date"
     >
+<!--      <ng-template kendoGridFilterCellTemplate let-filter>-->
+<!--        <kendo-datepicker (valueChange)="dateChange($event)"></kendo-datepicker>-->
+<!--      </ng-template>-->
       <ng-template kendoGridCellTemplate let-dataItem>
         <span>{{ dataItem.bidding_start_timestamp | date : 'short' }}</span>
       </ng-template>
@@ -151,6 +162,15 @@
     </kendo-grid-column>
 
     <kendo-grid-column field="is_covid_eligible_transport_required" title="COVID Transport" [width]="220">
+
+      <ng-template kendoGridFilterCellTemplate let-filter>
+        <kendo-switch
+          (valueChange)="switchChange($event, 'is_covid_eligible_transport_required')"
+          offLabel="No"
+          [checked]="checked"
+          onLabel="Yes">
+        </kendo-switch>
+      </ng-template>
       <ng-template kendoGridCellTemplate let-dataItem>
         <span>{{ dataItem.is_covid_eligible_transport_required ? 'Yes' : 'No' }}</span>
       </ng-template>

@@ -7,7 +7,7 @@ import { ButtonsModule } from "@progress/kendo-angular-buttons";
 import { WindowModule, DialogsModule } from "@progress/kendo-angular-dialog";
 import { FilterModule } from "@progress/kendo-angular-filter";
 
-import { GridModule, PDFModule, ExcelModule } from '@progress/kendo-angular-grid';
+import {GridModule, PDFModule, ExcelModule, RowFilterModule} from '@progress/kendo-angular-grid';
 import { ChartsModule } from '@progress/kendo-angular-charts';
 import { InputsModule } from '@progress/kendo-angular-inputs';
 
@@ -31,6 +31,7 @@ import 'hammerjs';
     ButtonsModule,
     FilterModule,
     DialogsModule,
+    RowFilterModule,
   ],
   declarations: [
     AppComponent,
