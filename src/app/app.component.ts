@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { DataBindingDirective, DataStateChangeEvent } from '@progress/kendo-angular-grid';
+import {DataBindingDirective, DataStateChangeEvent, FilterableSettings} from '@progress/kendo-angular-grid';
 import {
   process,
   State,
@@ -7,7 +7,7 @@ import {
   AggregateResult,
   AggregateDescriptor,
   CompositeFilterDescriptor,
-  filterBy,
+  filterBy, DataResult,
 } from "@progress/kendo-data-query";
 import { MultipleSortSettings } from "@progress/kendo-angular-grid";
 import { trips } from './trips';
@@ -22,17 +22,19 @@ import { FilterExpression } from '@progress/kendo-angular-filter';
 export class AppComponent implements OnInit {
   @ViewChild(DataBindingDirective) dataBinding: DataBindingDirective;
   public gridData: unknown[] = trips;
-  public gridView: unknown[];
+  public gridView: DataResult;
 
   public formGroup: FormGroup;
 
   public mySelection: string[] = [];
 
-  public total: any;
+  public total: AggregateResult;
 
   public opened = false;
 
   public filterValue: CompositeFilterDescriptor = { logic: "or", filters: [] };
+
+  public filterMode: FilterableSettings = "menu, row";
 
   public filters: FilterExpression[] = [
     {
@@ -58,6 +60,8 @@ export class AppComponent implements OnInit {
   ];
 
   public state: State = {
+    skip: 0,
+    take: 20,
     // Initial filter descriptor
     filter: {
       logic: 'or',
@@ -94,9 +98,13 @@ export class AppComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.gridView = this.gridData;
-    this.total = aggregateBy(this.gridView, this.aggregates);
+    this.gridView = process(this.gridData, this.state);
+    this.total = aggregateBy(this.gridView.data, this.aggregates);
+
+    console.log(this.total);
   }
+
+
 
   public aggregates: AggregateDescriptor[] = [
     { field: "billing.cost", aggregate: "sum" },
@@ -104,49 +112,46 @@ export class AppComponent implements OnInit {
 
   public clearFilters() {
     this.state.filter = {
-      logic: 'and',
+      logic: 'or',
       filters: []
     };
 
-    // this.dataStateChange(this.state);
+    this.dataStateChange({...this.state, skip: 0, take: 20});
   }
 
   public onFilter(input: Event): void {
-    // const inputValue = (input.target as HTMLInputElement).value;
-
-    // state {
-    //   filter: {
-    //     logic: "or",
-    //       filters: [
-    //       {
-    //         field: 'status.name',
-    //         operator: 'contains',
-    //         value: inputValue
-    //       },
-    //       {
-    //         field: 'trip_id',
-    //         operator: 'contains',
-    //         value: inputValue
-    //       },
-    //       {
-    //         field: 'is_confirmed',
-    //         operator: 'contains',
-    //         value: inputValue
-    //       },
-    //       {
-    //         field: 'is_rescue',
-    //         operator: 'contains',
-    //         value: inputValue
-    //       },
-    //       {
-    //         field: 'bidding_start_timestamp',
-    //         operator: 'contains',
-    //         value: inputValue
-    //       }
-    //     ]
-    //   }}
-
-    this.gridView = process(this.gridData, this.state).data;
+    const inputValue = (input.target as HTMLInputElement).value;
+    this.state.filter = {
+        logic: "or",
+          filters: [
+          {
+            field: 'status.name',
+            operator: 'contains',
+            value: inputValue
+          },
+          {
+            field: 'trip_id',
+            operator: 'contains',
+            value: inputValue
+          },
+          {
+            field: 'is_confirmed',
+            operator: 'contains',
+            value: inputValue
+          },
+          {
+            field: 'is_rescue',
+            operator: 'contains',
+            value: inputValue
+          },
+          {
+            field: 'bidding_start_timestamp',
+            operator: 'contains',
+            value: inputValue
+          }
+        ]
+      }
+    this.gridView = process(this.gridData, this.state);
 
     this.dataBinding.skip = 0;
   }
@@ -154,8 +159,8 @@ export class AppComponent implements OnInit {
   public dataStateChange(state: DataStateChangeEvent): void {
     console.log(state);
     this.state = state;
-    // this.gridView = process(trips, this.state);
-    // this.total = aggregateBy(this.gridData.data, this.aggregates);
+    this.gridView = process(trips, this.state);
+    // this.total = aggregateBy(this.gridView.data, this.aggregates);
   }
 
   public createFormGroup = (args: any): FormGroup => {
@@ -179,7 +184,7 @@ export class AppComponent implements OnInit {
   }
 
   public applyFilter(value: CompositeFilterDescriptor): void {
-    this.gridView = filterBy(trips, value);
+    this.gridView = process(filterBy(trips, value), this.state);
     this.filterValue = value;
   }
 

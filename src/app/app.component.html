@@ -21,7 +21,7 @@
 </kendo-window>
 
 <kendo-grid
-  [kendoGridBinding]="gridView"
+  [data]="gridView"
   kendoGridSelectBy="id"
   [(selectedKeys)]="mySelection"
   [kendoGridInCellEditing]="createFormGroup"
@@ -32,7 +32,6 @@
   [resizable]="true"
   [height]="500"
   [columnMenu]="{ filter: true }"
-  [filterable]="true"
   (dataStateChange)="dataStateChange($event)"
 >
 
@@ -82,7 +81,6 @@
       [width]="100"
       [class]="{'text-center': true}"
       [resizable]="false"
-      filter="boolean"
     >
       <ng-template kendoGridCellTemplate let-dataItem>
         <span *ngIf="dataItem.is_rescue" class="badge badge-success">Yes</span>
