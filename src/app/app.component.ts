@@ -132,14 +132,14 @@ export class AppComponent implements OnInit {
     this.dataStateChange({...this.state, skip: 0, take: 20});
   }
 
-  public switchChange(checked: boolean): void {
+  public switchChange(checked: boolean, field: string): void {
     // @ts-ignore
     const root = { logic: 'or', filter: [], ...this.filterValue };
-    const [filter] = flatten(root).filter((x: any) => x.field === "is_confirmed");
+    const [filter] = flatten(root).filter((x: any) => x.field === field);
 
     if (!filter) {
       root.filters.push({
-        field: "is_confirmed",
+        field: field,
         operator: "eq",
         value: checked ? 1 : 0
       });
@@ -195,10 +195,10 @@ export class AppComponent implements OnInit {
 
   public dataStateChange(state: DataStateChangeEvent): void {
     console.log(state);
-    const [filter] = flatten(state.filter).filter((x: any) => x.field === "bidding_start_timestamp");
-    if (filter) {
-      filter.value = this.datePipe.transform(filter.value, 'yyyy-MM-dd h:mm:ss');
-    }
+    // const [filter] = flatten(state.filter).filter((x: any) => x.field === "bidding_start_timestamp");
+    // if (filter) {
+    //   filter.value = this.datePipe.transform(filter.value, 'yyyy-MM-dd h:mm:ss');
+    // }
     this.state = state;
     this.gridView = process(trips, this.state);
     // this.total = aggregateBy(this.gridView.data, this.aggregates);

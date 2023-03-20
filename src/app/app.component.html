@@ -74,10 +74,10 @@
     >
       <ng-template kendoGridFilterCellTemplate let-filter>
         <kendo-switch
-          (valueChange)="switchChange($event)"
-          offLabel="Not Confirmed"
+          (valueChange)="switchChange($event, 'is_confirmed')"
+          offLabel="No"
           [checked]="checked"
-          onLabel="Confirmed">
+          onLabel="Yes">
         </kendo-switch>
       </ng-template>
       <ng-template kendoGridCellTemplate let-dataItem>
