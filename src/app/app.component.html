@@ -25,6 +25,7 @@
   kendoGridSelectBy="id"
   [(selectedKeys)]="mySelection"
   [kendoGridInCellEditing]="createFormGroup"
+  [skip]="state.skip"
   [pageSize]="20"
   [pageable]="true"
   [sortable]="sortSettings"
@@ -32,6 +33,7 @@
   [resizable]="true"
   [height]="500"
   [columnMenu]="{ filter: true }"
+  [filterable]="true"
   (dataStateChange)="dataStateChange($event)"
 >
 
