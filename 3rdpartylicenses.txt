@@ -40,6 +40,9 @@ SEE LICENSE IN LICENSE.md
 @progress/kendo-angular-excel-export
 SEE LICENSE IN LICENSE.md
 
+@progress/kendo-angular-filter
+SEE LICENSE IN LICENSE.md
+
 @progress/kendo-angular-grid
 SEE LICENSE IN LICENSE.md
 
