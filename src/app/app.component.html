@@ -71,6 +71,7 @@
       [width]="200"
       [class]="{'text-center': true}"
       [resizable]="true"
+      [columnMenu]="false"
     >
       <ng-template kendoGridFilterCellTemplate let-filter>
         <kendo-switch
@@ -91,6 +92,7 @@
       [width]="100"
       [class]="{'text-center': true}"
       [resizable]="false"
+      [columnMenu]="false"
     >
       <ng-template kendoGridFilterCellTemplate let-filter>
         <kendo-switch
@@ -161,7 +163,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="is_covid_eligible_transport_required" title="COVID Transport" [width]="220">
+    <kendo-grid-column [columnMenu]="false" field="is_covid_eligible_transport_required" title="COVID Transport" [width]="220">
 
       <ng-template kendoGridFilterCellTemplate let-filter>
         <kendo-switch
