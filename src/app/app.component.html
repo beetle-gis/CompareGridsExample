@@ -38,11 +38,10 @@
 >
 
   <ng-template kendoGridToolbarTemplate>
-    <input [style.width.px]="165" placeholder="Search in all columns..." kendoTextBox (input)="onFilter($event)"/>
     <kendo-grid-spacer></kendo-grid-spacer>
     <button class="k-button" (click)="clearFilters()">Clear Filters</button>
-    <button kendoGridExcelCommand type="button" icon="file-excel">Export to Excel</button>
-    <button kendoGridPDFCommand icon="file-pdf">Export to PDF</button>
+<!--    <button kendoGridExcelCommand type="button" icon="file-excel">Export to Excel</button>-->
+<!--    <button kendoGridPDFCommand icon="file-pdf">Export to PDF</button>-->
   </ng-template>
 
   <kendo-grid-checkbox-column
@@ -55,13 +54,14 @@
     [locked]="true"
   ></kendo-grid-checkbox-column>
 
-  <kendo-grid-column-group title="Group 1" [columnMenu]="false">
+
     <kendo-grid-column field="status.name" title="Trip Status" [width]="220">
       <ng-template kendoGridCellTemplate let-dataItem>
         <div class="customer-name">{{ dataItem.status.name }}</div>
       </ng-template>
     </kendo-grid-column>
 
+    <kendo-grid-column-group title="Group 1" [columnMenu]="false">
     <kendo-grid-column field="trip_id" title="Trip Number" [width]="220">
     </kendo-grid-column>
 

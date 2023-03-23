@@ -159,43 +159,6 @@ export class AppComponent implements OnInit {
     this.gridView = process(filterBy(this.gridData, filter), this.state);
   }
 
-  public onFilter(input: Event): void {
-    const inputValue = (input.target as HTMLInputElement).value;
-    this.state.filter = {
-        logic: "or",
-          filters: [
-          {
-            field: 'status.name',
-            operator: 'contains',
-            value: inputValue
-          },
-          {
-            field: 'trip_id',
-            operator: 'contains',
-            value: inputValue
-          },
-          {
-            field: 'is_confirmed',
-            operator: 'contains',
-            value: inputValue
-          },
-          {
-            field: 'is_rescue',
-            operator: 'contains',
-            value: inputValue
-          },
-          {
-            field: 'bidding_start_timestamp',
-            operator: 'contains',
-            value: inputValue
-          }
-        ]
-      }
-    this.gridView = process(this.gridData, this.state);
-
-    this.dataBinding.skip = 0;
-  }
-
   public dataStateChange(state: DataStateChangeEvent): void {
     this.state = state;
     this.gridView = process(this.gridData, this.state);
@@ -207,7 +170,7 @@ export class AppComponent implements OnInit {
 
     this.formGroup = this.formBuilder.group({
       trip_id: [item.trip_id],
-      bidding_start_timestamp: [item.bidding_start_timestamp],
+      bidding_start_timestamp: [item.bidding_start_timestamp ? new Date(item.bidding_start_timestamp).toISOString() : item.bidding_start_timestamp],
       /*...*/
     });
 
