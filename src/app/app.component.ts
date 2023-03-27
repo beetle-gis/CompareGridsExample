@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import {DataBindingDirective, DataStateChangeEvent, FilterableSettings} from '@progress/kendo-angular-grid';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import { DataBindingDirective, DataStateChangeEvent } from '@progress/kendo-angular-grid';
 import {
   process,
   State,
@@ -29,10 +29,10 @@ const flatten = (filter: any) => {
 @Component({
   selector: 'my-app',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class AppComponent implements OnInit {
-  public checked = false;
   @ViewChild(DataBindingDirective) dataBinding: DataBindingDirective;
   public gridData: unknown[] = trips;
   public gridView: DataResult;
@@ -42,7 +42,6 @@ export class AppComponent implements OnInit {
   public opened = false;
   public filterValue: CompositeFilterDescriptor = { logic: "or", filters: [] };
   public filter: CompositeFilterDescriptor;
-  public filterMode: FilterableSettings = "menu, row";
   public filters: FilterExpression[] = [
     {
       field: "status.name",
@@ -57,12 +56,12 @@ export class AppComponent implements OnInit {
     {
       field: "is_confirmed",
       title: "Is Confirmed",
-      editor: "boolean",
+      editor: "string",
     },
     {
       field: "is_rescue",
       title: "Rescue Trip",
-      editor: "boolean",
+      editor: "string",
     },
   ];
 
@@ -113,51 +112,45 @@ export class AppComponent implements OnInit {
         // @ts-ignore
         trip.bidding_start_timestamp = new Date(slicedDate).setHours(0,0,0,0);
       }
+      // @ts-ignore
+      trip.is_confirmed = trip.is_confirmed ? 'Confirmed' : 'Not Confirmed';
+      // @ts-ignore
+      trip.is_rescue = trip.is_rescue ? 'Yes' : 'No';
+      // @ts-ignore
+      trip.is_covid_eligible_transport_required = trip.is_covid_eligible_transport_required ? 'Yes' : 'No';
     });
     this.gridView = process(this.gridData, this.state);
     this.total = aggregateBy(this.gridView.data, this.aggregates);
-
-    console.log(this.total);
+    console.log(this.gridView);
   }
-
-
 
   public aggregates: AggregateDescriptor[] = [
     { field: "billing.cost", aggregate: "sum" },
   ];
 
-  public clearFilters() {
-    this.state.filter = {
-      logic: 'and',
-      filters: []
-    };
+  // public switchChange(checked: boolean, field: string): void {
+  //   // @ts-ignore
+  //   const root = { logic: 'and', filters: [], ...this.filter };
+  //   const [filter] = flatten(root).filter((x: any) => x.field === field);
+  //
+  //   if (!filter) {
+  //     root.filters.push({
+  //       field: field,
+  //       operator: "eq",
+  //       value: checked ? 1 : 0
+  //     });
+  //   } else {
+  //     filter.value = checked ? 1 : 0;
+  //   }
+  //
+  //   this.filterChange(root);
+  // }
 
-    this.dataStateChange({...this.state, skip: 0, take: 20});
-  }
-
-  public switchChange(checked: boolean, field: string): void {
-    // @ts-ignore
-    const root = { logic: 'and', filters: [], ...this.filter };
-    const [filter] = flatten(root).filter((x: any) => x.field === field);
-
-    if (!filter) {
-      root.filters.push({
-        field: field,
-        operator: "eq",
-        value: checked ? 1 : 0
-      });
-    } else {
-      filter.value = checked ? 1 : 0;
-    }
-
-    this.filterChange(root);
-  }
-
-  public filterChange(filter: CompositeFilterDescriptor): void {
-    this.filter = filter;
-    this.state.filter = filter;
-    this.gridView = process(filterBy(this.gridData, filter), this.state);
-  }
+  // public filterChange(filter: CompositeFilterDescriptor): void {
+  //   this.filter = filter;
+  //   this.state.filter = filter;
+  //   this.gridView = process(filterBy(this.gridData, filter), this.state);
+  // }
 
   public dataStateChange(state: DataStateChangeEvent): void {
     this.state = state;
@@ -190,10 +183,10 @@ export class AppComponent implements OnInit {
     this.filterValue = value;
   }
 
-  public sortSettings: MultipleSortSettings = {
-    mode: "multiple",
-    initialDirection: "desc",
-    allowUnsort: true,
-    showIndexes: true,
-  };
+  // public sortSettings: MultipleSortSettings = {
+  //   mode: "multiple",
+  //   initialDirection: "desc",
+  //   allowUnsort: true,
+  //   showIndexes: true,
+  // };
 }
